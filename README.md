@@ -1,6 +1,7 @@
 # 🧠 Workshop 3: Machine Learning & Data Streaming – Happiness Score Prediction
 # Developed by:
 # Luis Angel Garcia (2230177)
+
 This project implements a full Machine Learning pipeline combined with real-time data processing using Kafka. A regression model is trained to predict the Happiness Score of various countries using data from 2015 to 2019. A streaming system processes the data and stores predictions and features in a database.
 
 ---
@@ -68,16 +69,37 @@ workshop_003/
 
 ## 🧠 Model Training
 
-* Model: `LinearRegression`
-* Features used:
+Three models were trained to compare performance:
+- **Linear Regression**
+- **Ridge Regression**
+- **Huber Regressor**
 
-  * `GDP`, `Social support`, `Health`, `Freedom`, `Trust`, `Generosity`, `Dystopia`, `Year`
-* Metrics:
+### 📊 Metrics Comparison:
 
-  * 📈 **R² Score**: 0.9863
-  * 📏 **RMSE**: 0.1307
-  * 📉 **MSE**: 0.0171
-  * 📊 **MAE**: 0.0990
+**Linear Regression**
+- R² Score: 0.9863
+- RMSE: 0.1307
+- MAE: 0.0990
+- MSE: 0.0171
+
+**Ridge Regression**
+- R² Score: 0.9862
+- RMSE: 0.1313
+- MAE: 0.0986
+- MSE: 0.0172
+
+**Huber Regressor**
+- R² Score: 0.9859
+- RMSE: 0.1328
+- MAE: 0.0938
+- MSE: 0.0176
+
+**Accuracy (±0.3 tolerance)**
+- Linear Regression: 97.02%
+- Ridge Regression: 97.02%
+- Huber Regressor: 96.6%
+
+➡️ **Final Decision**: Linear Regression was selected due to its simplicity, interpretability, and strong performance.
 
 ---
 
@@ -101,7 +123,6 @@ workshop_003/
 * Database: `predictions.db`
 * Table: `predictions`
 * Stores:
-
   * Input features
   * Year
   * Predicted `Happiness Score`
@@ -118,7 +139,7 @@ python database/consultar_db.py
 
 ## 📊 Model Evaluation
 
-Generated plot: Predicted vs Actual
+Generated plot: Predicted vs Actual  
 Conclusion: The predictions closely follow the ideal line. No major error trends or outliers.
 
 ---
@@ -136,7 +157,7 @@ cd workshop_003
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # or .\venv\Scripts\activate on Windows
+source venv/bin/activate  # or .env\Scriptsctivate on Windows
 ```
 
 ### 3. Install dependencies
@@ -148,10 +169,9 @@ pip install -r requirements.txt
 ### 4. Run the notebook to generate model and dataset
 
 Before starting Kafka, open the notebook and run it to generate the following:
-
-* `models/happiness_model.pkl`
-* `models/scaler.pkl`
-* `data/dataset_limpio.csv`
+- `models/happiness_model.pkl`
+- `models/scaler.pkl`
+- `data/dataset_limpio.csv`
 
 ```bash
 jupyter notebook notebooks/eda_etl.ipynb

@@ -2,18 +2,15 @@ from kafka import KafkaConsumer
 import json
 import joblib
 import pandas as pd
-import sqlite3  # Cambia si usarás otra base de datos
+import sqlite3  
 import os
 
-# Cargar modelo y scaler
-model = joblib.load("../models/happiness_model.pkl")
-scaler = joblib.load("../models/scaler.pkl")
+model = joblib.load("models/happiness_model.pkl")
+scaler = joblib.load("models/scaler.pkl")
 
-# Crear conexión a SQLite (base local)
-conn = sqlite3.connect("../database/predictions.db")
+conn = sqlite3.connect("database/predictions.db")
 cursor = conn.cursor()
 
-# Crear tabla si no existe
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS predictions (
     GDP REAL,
@@ -29,7 +26,6 @@ CREATE TABLE IF NOT EXISTS predictions (
 """)
 conn.commit()
 
-# Crear consumidor
 consumer = KafkaConsumer(
     'happiness_topic',
     bootstrap_servers='localhost:9092',
@@ -40,18 +36,14 @@ consumer = KafkaConsumer(
 
 print("📥 Esperando mensajes del topic...")
 
-# Escuchar y procesar
 for msg in consumer:
     data = msg.value
 
-    # Convertir a DataFrame para transformar con el scaler
     df = pd.DataFrame([data])
     X = scaler.transform(df)
 
-    # Hacer predicción
     predicted = model.predict(X)[0]
 
-    # Insertar en base de datos
     cursor.execute("""
         INSERT INTO predictions (GDP, SocialSupport, Health, Freedom, Trust, Generosity, Dystopia, Year, PredictedScore)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
