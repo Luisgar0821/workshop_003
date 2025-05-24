@@ -1,21 +1,21 @@
-import sqlite3
-import pandas as pd
+import psycopg2
+import sys
 import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'kafka')))
+from config_postgres import PG_CONFIG
 
-DB_PATH = "database/predictions.db"
+def consultar_predicciones():
+    conn = psycopg2.connect(**PG_CONFIG)
+    cursor = conn.cursor()
 
-if not os.path.exists(DB_PATH):
-    print("No se encontró la base de datos. Asegúrate de que el consumidor la haya generado.")
-    exit()
+    cursor.execute("SELECT * FROM predictions ORDER BY id DESC LIMIT 10;")
+    rows = cursor.fetchall()
 
-conn = sqlite3.connect(DB_PATH)
+    for row in rows:
+        print(row)
 
-df = pd.read_sql_query("SELECT * FROM predictions", conn)
+    cursor.close()
+    conn.close()
 
-conn.close()
-
-print("Predicciones encontradas:")
-print(df.head())
-
-print(f"\n Total de predicciones almacenadas: {len(df)}")
-
+if __name__ == "__main__":
+    consultar_predicciones()

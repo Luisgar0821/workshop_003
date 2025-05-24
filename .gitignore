@@ -2,3 +2,4 @@ venv
 *.pkl
 predictions.db
 *.csv
+__pycache__/
