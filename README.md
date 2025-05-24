@@ -141,7 +141,7 @@ No major outliers or bias were observed.
 ### 1. Clone the repository
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/Luisgar0821/workshop_003
 cd workshop_003
 ```
 
